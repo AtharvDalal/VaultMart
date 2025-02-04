@@ -1,9 +1,9 @@
-import { IsEmail, MinLength } from 'class-validator';
+import { z } from 'zod';
 
-export class signUpDtos {
-  @IsEmail()
-  email: string;
-
-  @MinLength(6)
-  password: string;
-}
+export const signUpDto = z.object({
+  name: z.string().min(2, { message: 'Name Atleast Contain min 2 char ' }),
+  email: z.string().email({ message: 'Name Atleast Contain min 2 char ' }),
+  password: z
+    .string()
+    .min(6, { message: 'Password Atleast Contain min 3 char ' }),
+});

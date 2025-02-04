@@ -1,41 +1,15 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
-import { ProductsService } from './products.service';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { Body, Controller, Post, UsePipes } from '@nestjs/common';
+import { ProductService } from './products.service';
+import { JoiValidationPipe } from 'src/common/pipes/joi.validation';
+import { createProduct } from './dto/create-product.dto';
 
-@Controller('products')
-export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+@Controller('product')
+export class ProductController {
+  constructor(private readonly productService: ProductService) {}
 
   @Post('create')
-  create(@Body() createProductDto: CreateProductDto[]) {
-    return this.productsService.create(createProductDto);
-  }
-
-  @Get('getAll')
-  // getAllproducts() {
-  //   return this.productsService.getAllproducts();
-  // }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.productsService.findOne(+id);
-  // }
-  @Patch(':id')
-  update(@Param('id') id: number, @Body() updateProductDto: UpdateProductDto) {
-    return this.productsService.updateProductdeatils(id, updateProductDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productsService.remove(+id);
+  @UsePipes(new JoiValidationPipe(createProduct))
+  createProduct(@Body() createProductData: any) {
+    return this.productService.createProduct(createProductData);
   }
 }

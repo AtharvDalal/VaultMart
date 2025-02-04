@@ -1,13 +1,6 @@
-import { Exclude } from 'class-transformer';
-import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
+import { z } from 'zod';
 
-export class loginDto {
-  @IsNotEmpty()
-  @IsEmail()
-  email: string;
-
-  @Exclude()
-  @IsNotEmpty()
-  @MinLength(6)
-  password: string;
-}
+export const loginUserDto = z.object({
+  email: z.string().email({ message: 'Name nedd 3 char' }),
+  password: z.string().min(6, { message: 'password nedd 3 char' }),
+});

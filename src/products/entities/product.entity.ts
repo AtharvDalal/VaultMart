@@ -1,30 +1,20 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  OneToMany,
-  ManyToOne,
-} from 'typeorm';
-import { Purchase } from './purchase .enitiy';
-import { Category } from './category.enitiy';
+import { Category } from 'src/common/enums/category';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class Product {
+export class Products {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  name: string;
-
-  @Column('decimal')
-  price: number;
+  productname: string;
 
   @Column()
-  description: string;
+  desc: string;
 
-  @OneToMany(() => Purchase, (purchase) => purchase.product)
-  purchases: Purchase[];
+  @Column()
+  price: number;
 
-  @ManyToOne(() => Category, (category) => category.products)
+  @Column({ type: 'enum', enum: Category })
   category: Category;
 }

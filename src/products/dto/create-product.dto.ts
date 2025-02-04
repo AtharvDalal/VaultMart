@@ -1,22 +1,28 @@
-import { IsEmpty, IsNotEmpty, IsOptional } from 'class-validator';
-import { Purchase } from '../entities/purchase .enitiy';
-import { Category } from '../entities/category.enitiy';
+import * as Joi from 'joi';
+import { Category } from 'src/common/enums/category';
 
-export class CreateProductDto {
-  id: number;
+// Joi validation schema with correct message usage
+export const createProduct = Joi.object({
+  productname: Joi.string().min(2).max(100).required().messages({
+    'string.min': 'Min 2 characters required for product name',
+    'string.max': 'Max 100 characters allowed for product name',
+  }),
 
-  @IsNotEmpty()
-  name: string;
+  desc: Joi.string().min(2).max(50).required().messages({
+    'string.min': 'Min 2 characters required for description',
+    'string.max': 'Max 50 characters allowed for description',
+  }),
 
-  @IsNotEmpty()
-  price: number;
+  price: Joi.number().min(1).positive().required().messages({
+    'number.min': 'Price must be at least 1',
+    'number.positive': 'Price must be a positive number',
+  }),
 
-  @IsNotEmpty()
-  description: string;
-
-  @IsNotEmpty()
-  categoryname: string;
-
-  @IsOptional() // Mark it optional
-  purchases?: Purchase[];
-}
+  category: Joi.string()
+    .valid(Category.CLOTHING, Category.ELECTRONICS, Category.FURNITURE)
+    .required()
+    .messages({
+      'any.only':
+        'Category must be one of the following: clothing, electronics, or furniture',
+    }),
+});
