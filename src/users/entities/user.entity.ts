@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { Purchase } from 'src/products/entities/purchase .enitiy';
+
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -22,7 +22,4 @@ export class User {
 
   @Column({ nullable: true })
   phoneno: string;
-
-  @OneToMany(() => Purchase, (purchase) => purchase.user)
-  purchases: Purchase[];
 }
