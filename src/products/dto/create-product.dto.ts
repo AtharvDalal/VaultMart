@@ -1,7 +1,6 @@
 import * as Joi from 'joi';
 import { Category } from 'src/common/enums/category';
 
-// Joi validation schema with correct message usage
 export const createProduct = Joi.object({
   productname: Joi.string().min(2).max(100).required().messages({
     'string.min': 'Min 2 characters required for product name',
