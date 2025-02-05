@@ -1,7 +1,9 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Products } from './entities/product.entity';
 import { Repository } from 'typeorm';
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
+import { updateProduct } from './dto/update.prodcut.validation';
+import { UpdateProductDto } from './dto/updateProdcut.dto';
 
 @Injectable()
 export class ProductService {
@@ -34,6 +36,44 @@ export class ProductService {
     return {
       msg: 'Here is your all products',
       data: getAllProducts,
+    };
+  }
+
+  async updateProduct(productId: number, updateData: UpdateProductDto) {
+    const product = await this.ProductRepo.findOne({
+      where: { id: productId },
+    });
+
+    if (!product) {
+      throw new HttpException('Product Not Found', 404);
+    }
+
+    Object.assign(product, updateData);
+
+    const updateProduct = await this.ProductRepo.merge(product, updateData);
+
+    const saveUpdatedProduct = await this.ProductRepo.save(updateProduct);
+
+    return {
+      msg: 'Product was Updated Sucessfully',
+      data: saveUpdatedProduct,
+    };
+  }
+
+  async deleteProduct(productId: number) {
+    const product = await this.ProductRepo.findOne({
+      where: { id: productId },
+    });
+
+    if (!product) {
+      throw new HttpException('Product Not Found For deletion', 404);
+    }
+
+    const deletProduct = await this.ProductRepo.delete(product);
+
+    return {
+      msg: 'Product deleted',
+      deletProduct,
     };
   }
 }
