@@ -1,14 +1,23 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { User } from './entities/user.entity';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Connection, DataSource, Repository } from 'typeorm';
+import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
 import { updateProfileDto } from './dto/updateprofile.dto';
 import { ZodError } from 'zod';
+import { userProduct } from './entities/user.productsEnitiy';
+import { Products } from 'src/products/entities/product.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(userProduct) private userProduct: Repository<userProduct>,
+    @InjectRepository(Products) private productRepo: Repository<Products>,
+    private readonly datasource: DataSource,
   ) {}
 
   async updateProfile(updateProfileData: Partial<User>, userId: number) {
@@ -39,5 +48,18 @@ export class UsersService {
       message: 'Profile updated successfully',
       data: updatedUser,
     };
+  }
+
+  async buyProduct(userId: number, productId: number) {
+    try {
+      await this.datasource.query(
+        `INSERT INTO userbuyed_products (userId, productId) VALUES (?, ?)`,
+        [userId, productId],
+      );
+      return { message: 'Product purchased successfully' };
+    } catch (error) {
+      console.log('Error in product but', error);
+      throw new InternalServerErrorException(error.message);
+    }
   }
 }
