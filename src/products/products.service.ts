@@ -27,4 +27,13 @@ export class ProductService {
       data: saveProducts,
     };
   }
+
+  async getAllProdcuts() {
+    const getAllProducts = await this.ProductRepo.find();
+
+    return {
+      msg: 'Here is your all products',
+      data: getAllProducts,
+    };
+  }
 }
