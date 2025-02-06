@@ -20,9 +20,9 @@
 <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
 </p>
 
-# ValuetMart
+# VaultMart
 
-ValuetMart is a scalable e-commerce backend built with NestJS, designed to handle high-performance operations efficiently. It integrates MySQL, Redis, and AWS services for a robust infrastructure, ensuring secure authentication, seamless file uploads, and efficient data management.
+VaultMart  is a scalable e-commerce backend built with NestJS, designed to handle high-performance operations efficiently. It integrates MySQL, Redis, and AWS services for a robust infrastructure, ensuring secure authentication, seamless file uploads, and efficient data management.
 
 ## 🚀 Features
 - Scalable and modular architecture
@@ -52,7 +52,7 @@ Ensure you have the following installed:
 ### Setup & Run
 ```sh
 # Clone the repository
-git clone https://github.com/your-repo/valuetmart.git
+git clone git@github.com:AtharvDalal/VaultMart.git
 cd valuetmart
 
 # Install dependencies
