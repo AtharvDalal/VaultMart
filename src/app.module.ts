@@ -6,10 +6,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { User } from './users/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
-import { Product } from './products/entities/product.entity';
-import { Purchase } from './products/entities/purchase .enitiy';
-import { Category } from './products/entities/category.enitiy';
-import { CategorySeeder } from './common/seed';
+import { Products } from './products/entities/product.entity';
+import { userProduct } from './users/entities/user.productsEnitiy';
+import { CacheModule } from '@nestjs/cache-manager';
+import { redisStore } from 'cache-manager-redis-store';
 
 @Module({
   imports: [
@@ -21,20 +21,24 @@ import { CategorySeeder } from './common/seed';
       type: 'mysql',
       host: 'localhost',
       port: 3306,
-      username: 'root',
-      password: 'sangam24',
-      database: 'weshop',
-      entities: [User, Product, Purchase, Category],
+      username: process.env.USERNAME,
+      password: process.env.PASSWORD,
+      database: process.env.DBNAME,
+      entities: [User, Products, userProduct],
       synchronize: true,
     }),
-
-    TypeOrmModule.forFeature([Category]),
+    CacheModule.register({
+      store: redisStore,
+      host: process.env.REDIS_HOST || 'localhost',
+      port: parseInt(process.env.REDIS_PORT, 10) || 6379,
+      ttl: 60 * 5,
+    }),
 
     UsersModule,
     ProductsModule,
     AuthModule,
   ],
   controllers: [],
-  providers: [CategorySeeder],
+  providers: [],
 })
 export class AppModule {}

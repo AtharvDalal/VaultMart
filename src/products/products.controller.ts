@@ -6,22 +6,35 @@ import {
   Param,
   Patch,
   Post,
+  UploadedFile,
+  UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
 import { ProductService } from './products.service';
 import { JoiValidationPipe } from 'src/common/pipes/joi.validation';
 import { createProduct } from './dto/create-product.dto';
-import { updateProduct } from './dto/update.prodcut.validation';
-import { UpdateProductDto } from './dto/updateProdcut.dto';
+import { updateProductDtoVal } from './dto/update.prodcut.validation';
+
+import { FileInterceptor } from '@nestjs/platform-express';
+import { updateProDto } from './dto/updateProdcut.dto';
 
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post('create')
-  @UsePipes(new JoiValidationPipe(createProduct))
-  createProduct(@Body() createProductData: any) {
-    return this.productService.createProduct(createProductData);
+  @UseInterceptors(FileInterceptor('image'))
+  async createProduct(
+    @Body() createProductData: any,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    console.log('Product Data:', createProductData);
+    console.log('Uploaded File:', file);
+    const product = await this.productService.createProduct(
+      createProductData,
+      file,
+    );
+    return product;
   }
 
   @Get('getall')
@@ -30,8 +43,11 @@ export class ProductController {
   }
 
   @Patch('update/:id')
-  @UsePipes(new JoiValidationPipe(updateProduct))
-  updateProduct(@Param('id') id: number, @Body() updateData: UpdateProductDto) {
+  @UsePipes(new JoiValidationPipe(updateProductDtoVal))
+  updateProduct(
+    @Param('id') id: number,
+    @Body() updateData: typeof updateProDto,
+  ) {
     return this.productService.updateProduct(id, updateData);
   }
 
