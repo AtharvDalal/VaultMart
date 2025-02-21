@@ -79,7 +79,7 @@ export class ProductService {
     };
   }
 
-  async updateProduct(productId: number, updateData: updateProDto) {
+  async updateProduct(productId: number, updateData: any) {
     const product = await this.ProductRepo.findOne({
       where: { id: productId },
     });

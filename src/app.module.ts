@@ -17,6 +17,9 @@ import { redisStore } from 'cache-manager-redis-store';
       isGlobal: true,
       envFilePath: '.env',
     }),
+
+    CacheModule.register(), // Register globally
+
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
